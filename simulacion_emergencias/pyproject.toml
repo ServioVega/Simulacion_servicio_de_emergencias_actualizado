@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "emergency-queueing"
+version = "0.1.0"
+description = "Modelado de servicio de emergencias con redes de colas de Jackson"
+authors = [
+    {name = "Flores Gallardo Emilio Josue"},
+    {name = "Pardo Lima Steeven Daniel"},
+    {name = "Vega Jimenez Servio Julian"},
+    {name = "Valarezo Roman Maria del Cisne"},
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "simpy>=4.1.0",
+    "matplotlib>=3.7.0",
+    "pyyaml>=6.0",
+    "pydantic>=2.0.0",
+    "scipy>=1.10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I", "W", "UP", "B", "C4", "ARG", "T20"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false

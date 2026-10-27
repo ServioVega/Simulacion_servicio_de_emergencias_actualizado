@@ -1,0 +1,48 @@
+# Parámetros base del escenario de referencia - VERSIÓN DE PRUEBA RÁPIDA
+# Servicio de urgencias de 5 etapas con 5 niveles de gravedad
+
+# Llegadas externas por hora (solo a registro, etapa 0)
+external_arrivals:
+  gamma: [10.0, 0.0, 0.0, 0.0, 0.0]  # γ₁ a γ₅
+
+# Tasas de servicio por hora por servidor (μᵢ)
+service_rates:
+  mu: [20.0, 15.0, 8.0, 12.0, 10.0]  # registro, triaje, consulta, lab, tratamiento
+
+# Cantidad de servidores por etapa (cᵢ)
+# c₃ = médicos (consulta), c₅ = enfermeros (tratamiento)
+servers:
+  c: [2, 2, 3, 2, 3]  # c₁ a c₅
+
+# Matriz de enrutamiento P[i][j] = prob. de ir de etapa i a j
+# Filas suman ≤ 1 (lo que falta = probabilidad de salida)
+routing_matrix:
+  p:
+    - [0.0, 1.0, 0.0, 0.0, 0.0]    # registro → triaje
+    - [0.0, 0.0, 0.85, 0.15, 0.0]  # triaje → consulta (85%) o lab (15%)
+    - [0.05, 0.0, 0.0, 0.2, 0.55]  # consulta → registro (5%), lab (20%), tratamiento (55%), salida (20%)
+    - [0.0, 0.0, 0.8, 0.0, 0.15]   # lab → consulta (80%), salida (20%)
+    - [0.01, 0.0, 0.0, 0.0, 0.0]   # tratamiento → registro (1%), salida (99%)
+
+# Clasificación de gravedad (5 niveles: 1=crítico ... 5=leve)
+# Porcentajes de llegada por nivel
+gravity_levels:
+  distribution: [0.05, 0.15, 0.30, 0.35, 0.15]  # suma = 1.0
+  labels: ["Crítico", "Urgente", "Moderado", "Leve", "No urgente"]
+
+# Configuración de simulación - REDUCIDA PARA PRUEBAS
+simulation:
+  replications: 1
+  horizon_hours: 100
+  warmup_hours: 10
+  random_seed: 42
+  validation_threshold: 0.30  # 30% para prueba ultra rápida
+
+# Barrido de parámetros para experimentos
+parameter_sweep:
+  doctors_range: [3, 5, 8]  # c₃
+  nurses_range: [3, 4]  # c₅
+  selected_scenarios:
+    - {c3: 3, c5: 3, label: "saturado"}
+    - {c3: 5, c5: 3, label: "equilibrado"}
+    - {c3: 8, c5: 4, label: "holgado"}
